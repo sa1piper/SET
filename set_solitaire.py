@@ -128,6 +128,8 @@ class SetGame(object):
         else:
             my_string=("Game Over - You cleared the deck in {:.2f} minutes".format(total_time))
             score_label=Label(display_frame,text=my_string, bg='aquamarine').grid(row=score_row+1, column=0,columnspan=4,sticky='nsew')
+            time.sleep(3)
+            restart_program()
 
     # examine our hand of 12 cards for SETs and populate the SETS dictionary with them
     def findsets(self, hand):
@@ -337,6 +339,8 @@ class SetGame(object):
             if cards_to_draw > len(mydeck.cards):
                 my_string=("Game Over - You cleared the deck in {:.2f} minutes".format(total_time))
                 score_label=Label(display_frame,text=my_string, bg='aquamarine').grid(row=score_row+1, column=0,columnspan=4,sticky='nsew')
+                time.sleep(3)
+                restart_program()
             else:
                 self.hand=self.NextHand
                 self.draw(mydeck,cards_to_draw)
@@ -352,6 +356,7 @@ class SetGame(object):
 # paint the screen and let user pick three cards
 my_window = Tk()
 my_window.title('SET Solitaire')
+my_window.attributes("-topmost", True)
 
 display_frame=Frame(my_window)
 score_frame=Frame(my_window,borderwidth=5, relief='groove')
