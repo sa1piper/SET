@@ -98,6 +98,7 @@ class SetGame(object):
         self.TotalTrys=0
         self.TotalSets=0
         self.NumErrs=0
+        self.MaxTries=0
                 
     def showhand(self):
         return "{}".format(self.set_hand)
@@ -115,22 +116,25 @@ class SetGame(object):
         return True
 
     # if no SET present in 12 cards drawn, swap out a card in our hand for a new one from the deck until we have a SET
+
     def swap_out_card(self):
         if len(mydeck.cards)>0:
-            while (self.NumSets == 0):
+            self.MaxTries=12
+            while (self.NumSets == 0 and self.MaxTries > 0 ):
                 return_card=self.hand.pop(-1)
                 draw_card=self.draw(mydeck,1)
                 mydeck.insert_in_deck(return_card)
-                #print('No SETS found, returned {} and drew {}'.format(return_card.shortname(), self.hand[-1].shortname()))
+                print('No SETS found, returned {} and drew {} cards_left_in_deck = {}'.format(return_card.shortname(), self.hand[-1].shortname(),len(mydeck.cards)))
                 self.findsets(self.hand)
+                self.MaxTries=self.MaxTries-1
                 if self.NumSets > 0 :
                     break
         else:
             my_string=("Game Over - You cleared the deck in {:.2f} minutes".format(total_time))
             score_label=Label(display_frame,text=my_string, bg='aquamarine').grid(row=score_row+1, column=0,columnspan=4,sticky='nsew')
-            time.sleep(3)
-            restart_program()
-
+            hint_button=Button(help_frame, text='Play Again?', command=restart_program).grid(sticky="sew")
+            exit
+            
     # examine our hand of 12 cards for SETs and populate the SETS dictionary with them
     def findsets(self, hand):
         self.SetNames=('A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z')
@@ -339,8 +343,8 @@ class SetGame(object):
             if cards_to_draw > len(mydeck.cards):
                 my_string=("Game Over - You cleared the deck in {:.2f} minutes".format(total_time))
                 score_label=Label(display_frame,text=my_string, bg='aquamarine').grid(row=score_row+1, column=0,columnspan=4,sticky='nsew')
-                time.sleep(3)
-                restart_program()
+                hint_button=Button(help_frame, text='Play Again?', command=restart_program).grid(sticky="sew")
+                exit
             else:
                 self.hand=self.NextHand
                 self.draw(mydeck,cards_to_draw)
